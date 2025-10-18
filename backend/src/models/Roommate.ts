@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface IRoommate extends Document {
-  userId: mongoose.Types.ObjectId; 
+  user: mongoose.Types.ObjectId; 
   title: string;
   age: number;
   gender: "male" | "female" | "other";
@@ -12,11 +12,12 @@ export interface IRoommate extends Document {
   preferences: string[];
   images: string[];
   createdAt?: Date;
+  updatedAt?:Date;
 }
 
 const roommateSchema = new Schema<IRoommate>(
   {
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
