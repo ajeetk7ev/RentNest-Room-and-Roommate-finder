@@ -26,7 +26,7 @@ const uploadFileToCloudinary = async (
     options.quality = quality;
   }
 
-  return await cloudinary.uploader.upload(file.tempFilePath, options);
+  return await cloudinary.uploader.upload(file, options);
 };
 
 export default uploadFileToCloudinary;

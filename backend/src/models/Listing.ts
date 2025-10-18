@@ -6,11 +6,11 @@ export interface IListing extends Document {
   city: string;
   address: string;
   price: number;
-  type: "room" | "flat" | "pg";
+  type: "room" | "flat" | "pg" | "apartment" | "villa";
   furnished: boolean;
   images: string[];
-  available: boolean;
-  ownerId: mongoose.Types.ObjectId; 
+  available?: boolean;
+  owner: mongoose.Types.ObjectId; 
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -62,7 +62,7 @@ const listingSchema = new Schema<IListing>(
       type: Boolean,
       default: true,
     },
-    ownerId: {
+    owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,

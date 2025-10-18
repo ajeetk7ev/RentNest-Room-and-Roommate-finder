@@ -1,17 +1,24 @@
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
+import fileUpload from 'express-fileupload';
 import dbConnect from "./config/db";
-import authRoutes from './routes/auth.routes'
+import authRoutes from './routes/auth.routes';
+import listinRoutes from './routes/listing.routes';
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/',
+}));
 
 
 app.use("/api/auth", authRoutes);
+app.use("/api/listing", listinRoutes);
 
 app.listen(PORT, async() => {
   await dbConnect();
