@@ -5,6 +5,7 @@ import fileUpload from 'express-fileupload';
 import dbConnect from "./config/db";
 import authRoutes from './routes/auth.routes';
 import listinRoutes from './routes/listing.routes';
+import roommateRoutes from './routes/roommate.routes'
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(fileUpload({
 
 app.use("/api/auth", authRoutes);
 app.use("/api/listing", listinRoutes);
+app.use("/api/roommate", roommateRoutes);
 
 app.listen(PORT, async() => {
   await dbConnect();
