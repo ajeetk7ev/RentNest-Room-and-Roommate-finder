@@ -1,26 +1,28 @@
-// components/auth/SignInWithEmail.tsx
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import { useAuthStore } from "@/store/authStore";
+import toast from "react-hot-toast";
 interface Props {
   onBack: () => void;
 }
 
 export default function SignInWithEmail({ onBack }: Props) {
+  const { signin, authIsLoading } = useAuthStore();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ firstName: "", email: "" });
+  const [email, setEmail] = useState("");
 
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("SignIn with Email Data:", formData);
-    navigate("/verify-email");
+    const res = await signin(email);
+    if (res.success) {
+      toast.success(res.message);
+      navigate("/verify-email", { state: { email: email } });
+    } else {
+      toast.error(res.error);
+    }
   };
 
   return (
@@ -34,25 +36,22 @@ export default function SignInWithEmail({ onBack }: Props) {
       </button>
 
       <Input
-        placeholder="First Name"
-        required
-        value={formData.firstName}
-        onChange={(e) => handleChange("firstName", e.target.value)}
-      />
-
-      <Input
         placeholder="Email"
         type="email"
         required
-        value={formData.email}
-        onChange={(e) => handleChange("email", e.target.value)}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
 
       <Button
         type="submit"
-        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+        disabled={authIsLoading}
+        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2"
       >
-        Continue
+        {authIsLoading && (
+          <Loader className="animate-spin h-5 w-5 text-white" />
+        )}
+        {authIsLoading ? "Processing..." : "Continue"}
       </Button>
     </form>
   );

@@ -1,38 +1,44 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import toast from "react-hot-toast";
 
 interface Props {
   onBack: () => void;
 }
 
 export default function SignupWithEmail({ onBack }: Props) {
+  const { signup, authIsLoading } = useAuthStore();
   const navigate = useNavigate();
 
-  // ✅ State to store form data
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
   });
 
-  // ✅ Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Handle submit
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // You can log or send this data to backend later
-    console.log("Signup data:", formData);
-
-    // Navigate to verify email page
-    navigate("/verify-email", { state: { email: formData.email } });
+    const res = await signup(
+      formData.firstName,
+      formData.lastName,
+      formData.email
+    );
+    if (res.success) {
+      toast.success(res.message);
+      navigate("/verify-email", { state: { email: formData.email } });
+    } else {
+      toast.error(res.error);
+    }
   };
 
   return (
@@ -73,9 +79,13 @@ export default function SignupWithEmail({ onBack }: Props) {
       {/* Continue Button */}
       <Button
         type="submit"
-        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+        disabled={authIsLoading}
+        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2"
       >
-        Continue
+        {authIsLoading && (
+          <Loader className="animate-spin h-5 w-5 text-white" />
+        )}
+        {authIsLoading ? "Processing..." : "Continue"}
       </Button>
     </form>
   );

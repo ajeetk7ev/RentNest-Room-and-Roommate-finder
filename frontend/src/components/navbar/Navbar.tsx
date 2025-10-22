@@ -8,9 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">

@@ -2,14 +2,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
+import toast from "react-hot-toast";
 
 interface Props {
   onBack: () => void;
 }
 
 export default function SignupWithPhone({ onBack }: Props) {
+  const { signup, authIsLoading } = useAuthStore();
   const navigate = useNavigate();
 
   // State to store form data
@@ -23,10 +26,19 @@ export default function SignupWithPhone({ onBack }: Props) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Signup Data:", formData); // For testing
-    navigate("/verify-phone");
+    const res = await signup(
+      formData.firstName,
+      formData.lastName,
+      formData.phone
+    );
+    if (res.success) {
+      toast.success(res.message);
+      navigate("/verify-phone", { state: { phone: formData.phone } });
+    } else {
+      toast.error(res.error);
+    }
   };
 
   return (
@@ -63,9 +75,13 @@ export default function SignupWithPhone({ onBack }: Props) {
 
       <Button
         type="submit"
-        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+        disabled={authIsLoading}
+        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2"
       >
-        Continue
+        {authIsLoading && (
+          <Loader className="animate-spin h-5 w-5 text-white" />
+        )}
+        {authIsLoading ? "Processing..." : "Continue"}
       </Button>
     </form>
   );

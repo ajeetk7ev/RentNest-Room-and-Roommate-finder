@@ -15,42 +15,41 @@ const phoneRegex = /^\+[1-9]\d{9,14}$/;
 
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { firstname, lastname, email, phone } = req.body;
+    const { firstname, lastname, identifier } = req.body;
 
     if (!firstname || !lastname) {
-      return res
-        .status(400)
-        .json({ error: "First name and last name are required." });
+      return res.status(400).json({ error: "First name and last name are required." });
     }
 
-    if (!email && !phone) {
+    if (!identifier) {
       return res.status(400).json({ error: "Email or phone required." });
     }
 
-    // Validate email if provided
-    if (email && !emailRegex.test(email)) {
-      return res.status(400).json({ error: "Invalid email format." });
+    let email: string | null = null;
+    let phone: string | null = null;
+
+    // Determine if identifier is email or phone
+    if (identifier.includes("@")) {
+      email = identifier;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (email && !emailRegex.test(email)) {
+        return res.status(400).json({ error: "Invalid email format." });
+      }
+    } else {
+      phone = identifier;
+      const phoneRegex = /^[0-9]{10,15}$/; // adjust according to your phone rules
+      if (phone && !phoneRegex.test(phone)) {
+        return res.status(400).json({ error: "Invalid phone number format." });
+      }
     }
 
-    // Validate phone if provided
-    if (phone && !phoneRegex.test(phone)) {
-      return res.status(400).json({
-        error:
-          "Invalid phone number format",
-      });
-    }
-
-    const identifier = email || phone;
-
+    // Check if user already exists
     const user = await User.findOne({
-      $or: [{ email: identifier }, { phone: identifier }],
+      $or: [{ email }, { phone }],
     });
 
     if (user) {
-      return res.status(409).json({
-        success: false,
-        message: "User already exists",
-      });
+      return res.status(409).json({ success: false, message: "User already exists" });
     }
 
     // Generate OTP
@@ -80,10 +79,7 @@ export const signup = async (req: Request, res: Response) => {
 
     if (!isSent) {
       await TempSignup.deleteOne({ identifier });
-      return res.status(500).json({
-        success: false,
-        message: "Failed to send OTP. Please try again later.",
-      });
+      return res.status(500).json({ success: false, message: "Failed to send OTP. Please try again later." });
     }
 
     return res.status(200).json({
@@ -95,6 +91,7 @@ export const signup = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to send OTP." });
   }
 };
+
 
 export const verifySignupOtp = async (req: Request, res: Response) => {
   try {
