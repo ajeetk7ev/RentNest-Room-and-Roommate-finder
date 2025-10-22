@@ -5,7 +5,7 @@ import type { Listing } from "@/types";
 import Navbar from "@/components/navbar/Navbar";
 import { Button } from "@/components/ui/button";
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
   const [filters, setFilters] = useState({});
   const [showFilters, setShowFilters] = useState(false);
 
@@ -96,7 +96,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pt-[72px] bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen pt-[100px] md:pt-[72px] bg-gray-100 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
       {/* Navbar */}
       <Navbar />
 
@@ -141,4 +141,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default HomePage;

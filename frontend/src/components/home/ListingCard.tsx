@@ -31,7 +31,7 @@ interface ListingCardProps {
   return (
     <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 border-gray-200 rounded-2xl bg-gray-50 dark:bg-gray-900">
       {/* 🖼️ Image Scroll Section */}
-      <div className="relative w-full h-56 overflow-x-auto flex snap-x snap-mandatory scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+      <div className="relative -mt-6 w-full h-56 overflow-x-auto flex snap-x snap-mandatory scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
         {listing.images && listing.images.length > 0 ? (
           listing.images.map((img, idx) => (
             <img

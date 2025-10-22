@@ -1,9 +1,14 @@
 import { Search, Heart, Home, Menu as MenuIcon, X } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { useState } from "react";
-
+import { Link, useNavigate } from "react-router-dom";
 function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -31,12 +36,19 @@ function Navbar() {
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="rounded-full hover:bg-gray-100">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-gray-100"
+            >
               <Heart className="h-5 w-5" />
             </Button>
-            <Button variant="outline" className="rounded-full font-medium">
+            <Link
+              to="/signin"
+              className="rounded-full font-medium border border-emerald-600 text-emerald-600 px-4 py-1 hover:bg-emerald-600 hover:text-white transition-colors duration-200"
+            >
               Sign In
-            </Button>
+            </Link>
             <Button className="rounded-full font-medium bg-emerald-600 hover:bg-emerald-700">
               Add Property
             </Button>
@@ -44,10 +56,17 @@ function Navbar() {
 
           {/* Mobile Hamburger Menu */}
           <div className="md:hidden">
-            <DropdownMenu open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <DropdownMenu
+              open={mobileMenuOpen}
+              onOpenChange={setMobileMenuOpen}
+            >
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  {mobileMenuOpen ? <X className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
+                  {mobileMenuOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <MenuIcon className="h-5 w-5" />
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48 p-2">
