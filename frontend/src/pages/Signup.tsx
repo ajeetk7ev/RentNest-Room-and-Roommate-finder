@@ -23,22 +23,22 @@ export default function SignupPage() {
               onClick={() => setStep("email")}
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
             >
-              <Mail className="h-5 w-5" /> Sign In with Email
+              <Mail className="h-5 w-5" /> Sign Up with Email
             </Button>
             <Button
               onClick={() => setStep("phone")}
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
             >
               <Phone className="h-5 w-5" />
-              Sign in with Phone
+              Sign Up with Phone
             </Button>
             <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <button
                 className="text-emerald-600 hover:underline"
                 onClick={() =>navigate("/signin")}
               >
-                Sign Up
+                Sign In
               </button>
             </p>
           </div>

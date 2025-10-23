@@ -1,22 +1,28 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
-export default function VerifyEmail() {
+
+export default function VerifyPhone() {
   const { verifyOTP, authIsLoading } = useAuthStore();
   const [otp, setOtp] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const email = location.state.email;
-  const authType = location.state.authType;
-
+  
+  // Get phone and authType from state
+  const phone = location.state?.phone;
+  const authType = location.state?.authType;
 
   const handleVerifyOTP = async () => {
-    const res = await verifyOTP(email, otp, authType);
+    if (!otp) {
+      toast.error("Please enter the OTP");
+      return;
+    }
+
+    const res = await verifyOTP(phone, otp, authType);
     if (res.success) {
       toast.success(res.message);
       navigate("/");
@@ -29,10 +35,10 @@ export default function VerifyEmail() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg max-w-md w-full">
         <h2 className="text-xl font-semibold mb-4 text-center">
-          Verify Your Email
+          Verify Your Phone
         </h2>
         <p className="text-sm text-gray-500 mb-4 text-center">
-          We’ve sent a 6-digit code to your email {email}.
+          We’ve sent a 6-digit code to your phone {phone}.
         </p>
         <Input
           placeholder="Enter verification code"
@@ -45,9 +51,7 @@ export default function VerifyEmail() {
           disabled={authIsLoading}
           onClick={handleVerifyOTP}
         >
-          {authIsLoading && (
-            <Loader className="animate-spin h-5 w-5 text-white" />
-          )}
+          {authIsLoading && <Loader className="animate-spin h-5 w-5 text-white" />}
           {authIsLoading ? "Verifying..." : "Verify"}
         </Button>
       </div>

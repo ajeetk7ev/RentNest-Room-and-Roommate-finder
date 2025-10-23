@@ -10,8 +10,6 @@ import {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-console.log("API URL IS ", API_URL);
-
 interface AuthState {
   user: User | null;
   token: string | null;
@@ -21,9 +19,12 @@ interface AuthState {
     lastname: string,
     identifier: string
   ) => Promise<any>;
-  verifySignup: (identifier: string, otp: string) => Promise<any>;
   signin: (identifier: string) => Promise<any>;
-  verifySignin: (identifier: string, otp: string) => Promise<any>;
+  verifyOTP: (
+    identifier: string,
+    otp: string,
+    authType: string
+  ) => Promise<any>;
   loadUser: () => void;
   logout: () => void;
 }
@@ -59,6 +60,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   signin: async (identifier) => {
     set({ authIsLoading: true });
     try {
+      console.log("I'm calling...");
       const res = await axios.post(`${API_URL}/auth/signin`, { identifier });
 
       if (res.data.success) {
@@ -81,15 +83,23 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  verifySignin: async (identifier, otp) => {
+  verifyOTP: async (identifier, otp, authType) => {
     set({ authIsLoading: true });
     try {
-      const res = await axios.post(`${API_URL}/auth/verify-signin-otp`, {
-        identifier,
-        otp,
-      });
+      let res = null;
+      if (authType === "signin") {
+        res = await axios.post(`${API_URL}/auth/verify-signin-otp`, {
+          identifier,
+          otp,
+        });
+      } else if (authType === "signup") {
+        res = await axios.post(`${API_URL}/auth/verify-signup-otp`, {
+          identifier,
+          otp,
+        });
+      }
 
-      if (res.data.success) {
+      if (res && res.data.success) {
         const { user, token, message } = res.data;
         setToLocalStorage("user", user);
         setToLocalStorage("token", token);
@@ -107,31 +117,31 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 
-  verifySignup: async (identifier, otp) => {
-    set({ authIsLoading: true });
-    try {
-      const res = await axios.post(`${API_URL}/auth/verify-signup-otp`, {
-        identifier,
-        otp,
-      });
+  //   verifySignup: async (identifier, otp) => {
+  //     set({ authIsLoading: true });
+  //     try {
+  //       const res = await axios.post(`${API_URL}/auth/verify-signup-otp`, {
+  //         identifier,
+  //         otp,
+  //       });
 
-      if (res.data.success) {
-        const { user, token, message } = res.data;
-        setToLocalStorage("user", user);
-        setToLocalStorage("token", token);
-        set({ token: token });
-        set({ user: user });
-        return { success: true, message: message || "OTP verified." };
-      }
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.response?.data.message || error.message,
-      };
-    } finally {
-      set({ authIsLoading: false });
-    }
-  },
+  //       if (res.data.success) {
+  //         const { user, token, message } = res.data;
+  //         setToLocalStorage("user", user);
+  //         setToLocalStorage("token", token);
+  //         set({ token: token });
+  //         set({ user: user });
+  //         return { success: true, message: message || "OTP verified." };
+  //       }
+  //     } catch (error: any) {
+  //       return {
+  //         success: false,
+  //         error: error.response?.data.message || error.message,
+  //       };
+  //     } finally {
+  //       set({ authIsLoading: false });
+  //     }
+  //   },
 
   loadUser: () => {
     try {

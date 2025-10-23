@@ -35,7 +35,9 @@ export default function SignupWithEmail({ onBack }: Props) {
     );
     if (res.success) {
       toast.success(res.message);
-      navigate("/verify-email", { state: { email: formData.email } });
+      navigate("/verify-email", {
+        state: { email: formData.email, authType: "signup" },
+      });
     } else {
       toast.error(res.error);
     }

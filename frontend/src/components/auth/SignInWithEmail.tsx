@@ -19,7 +19,7 @@ export default function SignInWithEmail({ onBack }: Props) {
     const res = await signin(email);
     if (res.success) {
       toast.success(res.message);
-      navigate("/verify-email", { state: { email: email } });
+      navigate("/verify-email", { state: { email: email, authType:"signin" } });
     } else {
       toast.error(res.error);
     }

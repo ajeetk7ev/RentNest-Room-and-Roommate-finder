@@ -122,13 +122,13 @@ const HomePage: React.FC = () => {
 
         {/* Listings */}
         <main className="flex-1 ml-0 md:ml-72 p-6 overflow-y-auto">
-             <Button
-              size="icon"
-              className="md:hidden sm:w-fit mx-auto px-3 w-full self-center py-1 bg-green-700 hover:bg-green-800 text-white hover:text-white font-semibold"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              Apply Filters
-            </Button>
+          <Button
+            size="icon"
+            className="md:hidden sm:w-fit  px-3 w-full self-center py-1 bg-green-700 hover:bg-green-800 text-white hover:text-white font-semibold"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            Apply Filters
+          </Button>
           <h2 className="text-xl font-semibold mb-4">Available Listings</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {listings.map((listing, idx) => (

@@ -35,7 +35,9 @@ export default function SignupWithPhone({ onBack }: Props) {
     );
     if (res.success) {
       toast.success(res.message);
-      navigate("/verify-phone", { state: { phone: formData.phone } });
+      navigate("/verify-phone", {
+        state: { phone: formData.phone, authType: "signup" },
+      });
     } else {
       toast.error(res.error);
     }

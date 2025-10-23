@@ -7,11 +7,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
 function Navbar() {
+  const { user, loadUser } = useAuthStore();
+  console.log("USER IS ", user);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+
+  useEffect(() => {
+    loadUser();
+  }, []);
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
@@ -20,7 +26,7 @@ function Navbar() {
           {/* Logo */}
           <div className="flex items-center gap-2 text-emerald-600">
             <Home className="h-8 w-8" />
-            <span className="text-2xl font-bold">HomeHaven</span>
+            <span className="text-2xl font-bold">RentNest</span>
           </div>
 
           {/* Search (hidden on mobile) */}
@@ -37,19 +43,21 @@ function Navbar() {
 
           {/* Desktop Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full hover:bg-gray-100"
-            >
-              <Heart className="h-5 w-5" />
-            </Button>
-            <Link
-              to="/signin"
-              className="rounded-full font-medium border border-emerald-600 text-emerald-600 px-4 py-1 hover:bg-emerald-600 hover:text-white transition-colors duration-200"
-            >
-              Sign In
-            </Link>
+            {!user ? (
+              <Link
+                to="/signin"
+                className="rounded-full font-medium border border-emerald-600 text-emerald-600 px-4 py-1 hover:bg-emerald-600 hover:text-white transition-colors duration-200"
+              >
+                Sign In
+              </Link>
+            ) : (
+              <Link
+                to="/dashboard/profile"
+                className="rounded-full font-medium border border-emerald-600 text-emerald-600 px-4 py-1 hover:bg-emerald-600 hover:text-white transition-colors duration-200"
+              >
+                Dashboard
+              </Link>
+            )}
             <Button className="rounded-full font-medium bg-emerald-600 hover:bg-emerald-700">
               Add Property
             </Button>
@@ -74,7 +82,13 @@ function Navbar() {
                 <DropdownMenuItem className="flex items-center gap-2">
                   <Heart className="h-4 w-4" /> Favorites
                 </DropdownMenuItem>
-                <DropdownMenuItem>Sign In</DropdownMenuItem>
+                <DropdownMenuItem>
+                  {!user ? (
+                    <Link to="/signin">Sign In</Link>
+                  ) : (
+                    <Link to="/dashboard/profile">Dashboard</Link>
+                  )}
+                </DropdownMenuItem>
                 <DropdownMenuItem>Add Property</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

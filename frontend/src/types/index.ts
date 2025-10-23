@@ -7,6 +7,13 @@ export interface User{
     image?:string;
 }
 
+// export interface Owner{
+//   _id:string;
+//   firstname:string;
+//   lastname:string;
+//   image:string;
+// }
+
 export interface Listing {
   _id:string
   title: string
@@ -17,6 +24,6 @@ export interface Listing {
   furnished: boolean
   images: string[]
   available?: boolean
-  ownerName?: string
+  ownerName?: string;
   createdAt?: Date
 }

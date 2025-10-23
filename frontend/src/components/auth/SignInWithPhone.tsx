@@ -20,7 +20,7 @@ export default function SignInWithPhone({ onBack }: Props) {
     const res = await signin(phone);
     if (res.success) {
       toast.success(res.message);
-      navigate("/verify-phone", { state: { phone: phone } });
+      navigate("/verify-phone", { state: { phone: phone, authType:"signin" } });
     } else {
       toast.error(res.error);
     }
